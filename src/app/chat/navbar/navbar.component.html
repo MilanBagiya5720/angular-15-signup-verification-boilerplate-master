@@ -1,0 +1,13 @@
+<nav class="bg-slate-500 p-2 flex justify-between items-center">
+  <div class="text-white text-lg font-bold">
+    <a routerLink="/chat/users" routerLinkActive="active">Chat</a>
+  </div>
+  <div *ngIf="isLoggedIn()" class="flex items-center space-x-4">
+    <div class="flex items-center space-x-2">
+      <span class="text-white" *ngIf="user">{{ user.name }}</span>
+    </div>
+    <button class="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded" (click)="logout()">
+      Logout
+    </button>
+  </div>
+</nav>
