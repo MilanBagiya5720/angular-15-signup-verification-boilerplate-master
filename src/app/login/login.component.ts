@@ -1,6 +1,6 @@
 ﻿import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { SocketService } from './../services/socket.service';
+import { SocketService } from '../services/socket.service';
 
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';

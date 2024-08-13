@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiService } from '@app/services/api.service';
 import { SocketService } from '@app/services/socket.service';
 import { UserService } from '@app/services/user.service';
-import { Subscription, Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { UserListComponent } from '../user-list/user-list.component';
+import { User } from '@app/_utils/_models/model';
 
 
 export enum Tabs {
@@ -18,12 +19,15 @@ export enum Tabs {
   styleUrls: ['./tabs.component.less']
 })
 export class TabsComponent implements OnInit, OnDestroy {
+  @Output() userSelected = new EventEmitter<User>();
+
   activeTab: Tabs = Tabs.Accepted;
   totalUnreadMessageCount: number | null = 0;
   userId: number;
   subs: Subscription;
   userTabs = Tabs;
-  usersList: any[] = [];
+  usersList: User[] = [];
+  receiverId: number;
 
   constructor(
     private socketService: SocketService,
@@ -42,10 +46,10 @@ export class TabsComponent implements OnInit, OnDestroy {
   initData(): void {
     this.registerUser();
 
-
     this.fetchUnreadMessageCount();
     this.fetchUsersList();
     this.checkUserStatus();
+    this.receiveRequest();
   }
 
   registerUser(): void {
@@ -54,7 +58,9 @@ export class TabsComponent implements OnInit, OnDestroy {
 
   fetchUnreadMessageCount(): void {
     this.subs.add(this.socketService.getUpdateUnreadMessageCount().subscribe((data) => {
-      this.totalUnreadMessageCount = data;
+      if (data.userId === this.userId) {
+        this.totalUnreadMessageCount = data.unreadMessageCount;
+      }
     }))
   }
 
@@ -82,7 +88,13 @@ export class TabsComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  receiveRequest(): void {
+    this.subs.add(this.socketService.updateUserList().subscribe((data) => {
+      if (this.userId === data.receiverId && this.activeTab === data.status) {
+        this.usersList = data.users;
+      }
+    }))
+  }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(UserListComponent);
@@ -90,6 +102,17 @@ export class TabsComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(() => {
       console.log('The dialog was closed');
     });
+  }
+
+  onUserSelected(user: User) {
+    this.userSelected.emit(user);
+    this.startChat(user);
+  }
+
+
+  public startChat(user: any): void {
+    this.apiService.setReceiverId(user.id);
+    this.apiService.setReceiver(user);
   }
 
   ngOnDestroy(): void {

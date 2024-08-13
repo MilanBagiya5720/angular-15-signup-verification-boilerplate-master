@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./chat.component.less']
 })
 export class ChatComponent {
+  selectedUser: any;
 
+  selectUser(user: any): void {
+    this.selectedUser = user;
+  }
 }

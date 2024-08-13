@@ -1,0 +1,46 @@
+<div class="chat-header flex justify-between items-center px-2 py-1 bg-gray-800 text-white">
+  <div class="user-info flex items-center">
+    <img src="https://via.placeholder.com/40" alt="User Avatar" class="rounded-full w-10 h-10 mr-3" />
+    <div>
+      <h4 class="font-semibold">{{selectedUser?.name}}</h4>
+      <span class="text-sm"
+        [ngClass]="{'text-green-500': selectedUser?.is_online, 'text-gray-400': !selectedUser?.is_online}">
+        {{ selectedUser?.is_online ? 'Online' : 'Offline' }}
+      </span>
+    </div>
+  </div>
+
+  <div class="relative">
+    <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" (click)="blockUser()">Block User</button>
+  </div>
+</div>
+
+<div class="chat-messages">
+  <div *ngFor="let group of groupedMessages">
+    <div class="time-group">
+      <h3>{{ group.timeGroup }}</h3>
+    </div>
+    <div *ngFor="let message of group.messages" [ngClass]="{
+        'message-container-right': message.senderId === userId,
+        'message-container-left': message.senderId !== userId
+      }">
+      <img [src]="getUserAvatar(message.senderId)" class="avatar" />
+      <div class="message" [ngClass]="{
+          'message-right': message.senderId === userId,
+          'message-left': message.senderId !== userId
+        }">
+        <span class="message-content" (click)="deleteMessage(message)">{{ message.text }}</span>
+        <span class="message-time">{{
+          formatTime(message.messageCreatedAt)
+          }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input">
+    <input [(ngModel)]="message" (keydown.enter)="sendMessage()" (input)="onTyping()" placeholder="Type a message..."
+      class="message-input" />
+
+    <button class="send-btn" (click)="sendMessage()">Send</button>
+  </div>
+</div>

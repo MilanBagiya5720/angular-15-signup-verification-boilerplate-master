@@ -2,15 +2,15 @@
 import { Router, NavigationStart } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import { Alert, AlertType } from '@app/_models';
-import { AlertService } from '@app/_services';
+import { AlertService } from '@app/_utils/_services';
+import { AlertType } from '../_models';
 
 @Component({ selector: 'alert', templateUrl: 'alert.component.html' })
 export class AlertComponent implements OnInit, OnDestroy {
   @Input() id = 'default-alert';
   @Input() fade = true;
 
-  alerts: Alert[] = [];
+  alerts: any[] = [];
   alertSubscription!: Subscription;
   routeSubscription!: Subscription;
 
@@ -53,7 +53,7 @@ export class AlertComponent implements OnInit, OnDestroy {
     this.routeSubscription.unsubscribe();
   }
 
-  removeAlert(alert: Alert) {
+  removeAlert(alert: any) {
     // check if already removed to prevent error on auto close
     if (!this.alerts.includes(alert)) return;
 
@@ -71,7 +71,7 @@ export class AlertComponent implements OnInit, OnDestroy {
     }
   }
 
-  cssClasses(alert: Alert) {
+  cssClasses(alert: any) {
     // if (!alert) return;
 
     const classes = ['alert', 'alert-dismissible', 'mt-4', 'container'];

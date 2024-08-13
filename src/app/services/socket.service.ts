@@ -143,4 +143,11 @@ export class SocketService {
   getUpdateUnreadMessageCount(): Observable<any> {
     return this.on<any>('update-unread-message-count');
   }
+
+  blockUser(senderId: number, receiverId: number): void {
+    this.emit('block-user', {
+      senderId,
+      receiverId,
+    });
+  }
 }

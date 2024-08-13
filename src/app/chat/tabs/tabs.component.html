@@ -33,14 +33,22 @@
     <div *ngFor="let user of usersList" class="mb-4">
       <a
         class="flex items-center p-3 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 w-full transition-transform transform hover:scale-[1.02]">
-        <img [src]="user.avatarUrl" alt="{{user.name}}'s avatar" class="w-10 h-10 rounded-full mr-3 object-cover">
-        <div class="flex-1">
+        <img [src]="user.images" alt="{{user.name}}'s avatar" class="w-10 h-10 rounded-full mr-3 object-cover">
+        <div class="flex-1" (click)="onUserSelected(user)">
           <h5 class="text-sm font-bold tracking-tight text-gray-900 dark:text-white truncate">
             {{user.name}}
           </h5>
           <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
             {{user.company_name}}
           </p>
+          <div class="flex items-center mt-2">
+            <div class="w-2 h-2 rounded-full mr-2" [ngClass]="{ 'bg-green-500': user.is_online === true || user.is_online === 1,
+                         'bg-red-600': user.is_online === false || user.is_online === 0 }">
+            </div>
+            <span class="text-xs text-gray-500 dark:text-gray-400">
+              {{ user.is_online === true || user.is_online === 1 ? 'Online' : 'Offline' }}
+            </span>
+          </div>
         </div>
       </a>
     </div>
@@ -50,8 +58,8 @@
     <div *ngFor="let user of usersList" class="mb-4">
       <a
         class="flex items-center p-3 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 w-full transition-transform transform hover:scale-[1.02]">
-        <img [src]="user.avatarUrl" alt="{{user.name}}'s avatar" class="w-10 h-10 rounded-full mr-3 object-cover">
-        <div class="flex-1">
+        <img [src]="user.images" alt="{{user.name}}'s avatar" class="w-10 h-10 rounded-full mr-3 object-cover">
+        <div class="flex-1" (click)="onUserSelected(user)">
           <h5 class="text-sm font-bold tracking-tight text-gray-900 dark:text-white truncate">
             {{user.name}}
           </h5>
@@ -59,10 +67,11 @@
             {{user.company_name}}
           </p>
           <div class="flex items-center mt-2">
-            <div class="w-2 h-2 rounded-full mr-2"
-              [ngClass]="{ 'bg-green-500': user.is_online, 'bg-red-600': !user.is_online }"></div>
+            <div class="w-2 h-2 rounded-full mr-2" [ngClass]="{ 'bg-green-500': user.is_online === true || user.is_online === 1,
+                         'bg-red-600': user.is_online === false || user.is_online === 0 }">
+            </div>
             <span class="text-xs text-gray-500 dark:text-gray-400">
-              {{ user.is_online ? 'Online' : 'Offline' }}
+              {{ user.is_online === true || user.is_online === 1 ? 'Online' : 'Offline' }}
             </span>
           </div>
         </div>

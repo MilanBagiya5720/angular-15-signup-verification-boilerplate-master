@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { LoginComponent } from './account/login.component';
+import { LoginComponent } from './login/login.component';
 
 const chatModule = () => import('./chat/chat.module').then(x => x.ChatModule);
 

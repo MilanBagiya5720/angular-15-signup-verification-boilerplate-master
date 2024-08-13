@@ -10,6 +10,7 @@ import { ChatComponent } from './chat.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ChatContainerComponent } from './chat-container/chat-container.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     SidebarComponent,
     SearchBarComponent,
     TabsComponent,
-    NavbarComponent
+    NavbarComponent,
+    ChatContainerComponent
   ],
   imports: [
     CommonModule,
@@ -28,6 +30,6 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatDialogModule,
     ChatRoutingModule
   ],
-  exports: [NavbarComponent]
+  exports: [NavbarComponent, ChatContainerComponent]
 })
 export class ChatModule { }

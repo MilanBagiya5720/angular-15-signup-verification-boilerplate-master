@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injectable, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from '@app/services/api.service';
 import { SocketService } from '@app/services/socket.service';
 import { UserService } from '@app/services/user.service';
@@ -14,7 +15,9 @@ export class UserListComponent implements OnInit {
 
   constructor(private userService: UserService,
     private apiService: ApiService,
-    private socketService: SocketService) {
+    private socketService: SocketService,
+    public dialogRef: MatDialogRef<UserListComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
 
     this.userId = this.apiService.getUserId();
   }
@@ -36,6 +39,7 @@ export class UserListComponent implements OnInit {
 
   sendMessageReq(receiver: number): void {
     this.socketService.sendMessageRequest(this.userId, receiver);
-    this.getUsersList();
+    alert('Message sent successfully');
+    this.dialogRef.close();
   }
 }
