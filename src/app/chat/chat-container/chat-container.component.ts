@@ -1,6 +1,6 @@
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { SocketService } from '@app/_utils/_services/socket.service';
-import { AfterViewChecked, Component, ElementRef, HostListener, Input, OnDestroy, Pipe, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnDestroy, Pipe, ViewChild } from '@angular/core';
 import { ApiService } from '@app/_utils/_services/api.service';
 import { User } from '@app/_utils/_models/model';
 import { Router } from '@angular/router';
@@ -16,6 +16,7 @@ import { UserService } from '@app/_utils/_services';
 export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
   @ViewChild('chatMessages') private chatMessagesContainer: ElementRef;
   subscription: Subscription = new Subscription();
+
   selectedUser: User;
   isOnline: boolean = true;
   userId: number | null = null;
@@ -34,10 +35,8 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
   }
 
   scrollToBottom(): void {
-    try {
+    if (this.chatMessagesContainer) {
       this.chatMessagesContainer.nativeElement.scrollTop = this.chatMessagesContainer.nativeElement.scrollHeight;
-    } catch (err) {
-      console.error('Error while scrolling to bottom:', err);
     }
   }
 

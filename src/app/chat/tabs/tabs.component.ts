@@ -1,11 +1,11 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { User } from '@app/_utils/_models/model';
 import { ApiService } from '@app/_utils/_services/api.service';
 import { SocketService } from '@app/_utils/_services/socket.service';
 import { UserService } from '@app/_utils/_services/user.service';
 import { Subscription } from 'rxjs';
 import { UserListComponent } from '../user-list/user-list.component';
-import { User } from '@app/_utils/_models/model';
 
 
 export enum Tabs {
@@ -45,7 +45,6 @@ export class TabsComponent implements OnInit, OnDestroy {
 
   initData(): void {
     this.registerUser();
-
     this.fetchUnreadMessageCount();
     this.fetchUsersList();
     this.checkUserStatus();
