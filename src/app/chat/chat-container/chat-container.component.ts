@@ -1,9 +1,9 @@
-import { SocketService } from '@app/services/socket.service';
+import { SocketService } from '@app/_utils/_services/socket.service';
 import { Component, HostListener, Input } from '@angular/core';
-import { ApiService } from '@app/services/api.service';
+import { ApiService } from '@app/_utils/_services/api.service';
 import { User } from '@app/_utils/_models/model';
 import { Router } from '@angular/router';
-import { ChatService } from '@app/services/chat.service';
+import { ChatService } from '@app/_utils/_services/chat.service';
 
 @Component({
   selector: 'app-chat-container',

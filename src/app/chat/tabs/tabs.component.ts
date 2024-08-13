@@ -1,8 +1,8 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ApiService } from '@app/services/api.service';
-import { SocketService } from '@app/services/socket.service';
-import { UserService } from '@app/services/user.service';
+import { ApiService } from '@app/_utils/_services/api.service';
+import { SocketService } from '@app/_utils/_services/socket.service';
+import { UserService } from '@app/_utils/_services/user.service';
 import { Subscription } from 'rxjs';
 import { UserListComponent } from '../user-list/user-list.component';
 import { User } from '@app/_utils/_models/model';

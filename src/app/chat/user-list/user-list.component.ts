@@ -1,8 +1,8 @@
 import { Component, OnInit, Injectable, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ApiService } from '@app/services/api.service';
-import { SocketService } from '@app/services/socket.service';
-import { UserService } from '@app/services/user.service';
+import { ApiService } from '@app/_utils/_services/api.service';
+import { SocketService } from '@app/_utils/_services/socket.service';
+import { UserService } from '@app/_utils/_services/user.service';
 
 @Component({
   selector: 'app-user-list',
