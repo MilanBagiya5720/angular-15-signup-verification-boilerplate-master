@@ -1,5 +1,6 @@
+import { Subscription } from 'rxjs';
 import { SocketService } from '@app/_utils/_services/socket.service';
-import { Component, HostListener, Input } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, HostListener, Input, OnDestroy, Pipe, ViewChild } from '@angular/core';
 import { ApiService } from '@app/_utils/_services/api.service';
 import { User } from '@app/_utils/_models/model';
 import { Router } from '@angular/router';
@@ -12,7 +13,9 @@ import { UserService } from '@app/_utils/_services';
   templateUrl: './chat-container.component.html',
   styleUrls: ['./chat-container.component.less']
 })
-export class ChatContainerComponent {
+export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
+  @ViewChild('chatMessages') private chatMessagesContainer: ElementRef;
+  subscription: Subscription = new Subscription();
   selectedUser: User;
   isOnline: boolean = true;
   userId: number | null = null;
@@ -26,9 +29,35 @@ export class ChatContainerComponent {
     this.userId = this.apiService.getUserId();
   }
 
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.chatMessagesContainer.nativeElement.scrollTop = this.chatMessagesContainer.nativeElement.scrollHeight;
+    } catch (err) {
+      console.error('Error while scrolling to bottom:', err);
+    }
+  }
+
   blockUser() {
     this.socketService.blockUser(this.userId, this.selectedUser.id);
   }
+
+  updateMessage(message: any) {
+    const chatHistory = message;
+    for (let i = 0; i < chatHistory.length; i++) {
+      for (let j = 0; j < chatHistory[i].messages!.length; j++) {
+        if (message['messageId'] == null) {
+          chatHistory[i].messages![j].isSeen = 1;
+        } else if (chatHistory[i].messages![j].messageId === message['messageId']) {
+          chatHistory[i].messages![j].isSeen = 1;
+        }
+      }
+    }
+  }
+
 
   message = '';
   receiverId: number | null = null;
@@ -42,7 +71,7 @@ export class ChatContainerComponent {
   }
 
   getSelectedUser(): void {
-    this.userService.user$.subscribe(user => {
+    this.subscription = this.userService.user$.subscribe(user => {
       if (user) {
         this.selectedUser = user;
         this.receiverId = user.id;
@@ -53,14 +82,26 @@ export class ChatContainerComponent {
         this.markAsRead();
         this.listenClearChat();
         this.listenDeleteMessage();
-        this.getMessageRequest();
         this.getTypingStatus();
+        this.messagesRead();
       }
     });
   }
 
+  messagesRead(): void {
+    this.subscription = this.socketService.messagesRead().subscribe((data) => {
+      if (data.receiverId === this.userId) {
+        this.groupedMessages.forEach((group) => {
+          group.messages.forEach((message) => {
+            message.isSeen = 1;
+          })
+        })
+      }
+    })
+  }
+
   getTypingStatus(): void {
-    this.socketService.getTypingStatus().subscribe((status) => {
+    this.subscription = this.socketService.getTypingStatus().subscribe((status) => {
       if (status.receiverId === this.userId) {
         this.isTyping = status.isTyping;
       }
@@ -96,13 +137,19 @@ export class ChatContainerComponent {
   }
 
   getUserMessage(): void {
-    this.socketService.receiveMessage().subscribe((message) => {
-      const lastMessage = this.groupedMessages.length
+    this.subscription = this.socketService.receiveMessage().subscribe((message) => {
+      this.markAsRead();
+
+      // Get the last grouped message
+      const lastGroupedMessage = this.groupedMessages.length > 0
         ? this.groupedMessages[this.groupedMessages.length - 1]
         : null;
-      if (lastMessage && lastMessage.timeGroup === message.timeGroup) {
-        lastMessage.messages.push(message);
+
+      if (lastGroupedMessage && lastGroupedMessage.timeGroup === message.timeGroup) {
+        // Add the new message to the existing group
+        lastGroupedMessage.messages.push(message);
       } else {
+        // Create a new group for the new timeGroup
         this.groupedMessages.push({
           timeGroup: message.timeGroup,
           messages: [message],
@@ -114,7 +161,7 @@ export class ChatContainerComponent {
   joinChat(): void {
     if (this.receiverId !== null) {
       this.socketService.joinRoom(this.userId!, this.receiverId);
-      this.chatService
+      this.subscription = this.chatService
         .getMessages(this.userId!, this.receiverId)
         .subscribe((messages) => {
           this.groupedMessages = messages;
@@ -140,14 +187,13 @@ export class ChatContainerComponent {
         senderId: this.userId,
         receiverId: this.receiverId,
         text: this.message,
-        sender: 'self',
+        sender: this.selectedUser.name,
         receiver: 'receiver',
         isSeen: 0,
         type: 'text',
         videoThumbnail: 'videoThumbnail',
         messageCreatedAt: new Date(),
         status: 'accepted',
-        senderName: this.selectedUser.name
       };
       this.socketService.sendMessage(message);
       this.message = '';
@@ -159,7 +205,7 @@ export class ChatContainerComponent {
   }
 
   public sendMessageRequest(): void {
-    this.socketService.sendMessageRequest(this.userId, this.receiverId);
+    this.socketService.sendMessageRequest(this.userId, this.receiverId, this.selectedUser.name);
   }
 
   clearChat(): void {
@@ -177,7 +223,7 @@ export class ChatContainerComponent {
   }
 
   listenDeleteMessage(): void {
-    this.socketService.listenDeleteMessage().subscribe((messageId) => {
+    this.subscription = this.socketService.listenDeleteMessage().subscribe((messageId) => {
       this.groupedMessages = this.groupedMessages.map((group) => ({
         ...group,
         messages: group.messages.filter(
@@ -200,39 +246,7 @@ export class ChatContainerComponent {
     );
   }
 
-  private getMessageRequest(): void {
-    this.socketService.receiveRequest().subscribe(
-      ({ senderId, message, senderName }: any) => {
-        debugger;
-        // const user = this.users.find((u) => u.id === senderId);
-        // if (user) {
-        //   user.lastMessage = message;
-        //   this.messageRequests.push({
-        //     senderId,
-        //     senderName,
-        //     lastMessage: message,
-        //   });
-
-        //   this.toast.success(`Message request from ${user.name}`, message);
-        // }
-      },
-      (error) => {
-        // this.toast.error('Failed to receive message request', '');
-        console.error('Failed to receive message request', error);
-      }
-    );
-
-    this.socketService.messageRequestResponse().subscribe(
-      ({ receiverId, status }: any) => {
-        debugger;
-        // // const user = this.users.find((u) => u.id === receiverId);
-        // if (user) {
-        //   user.status = status;
-        // }
-      },
-      (error) => {
-        console.error('Failed to handle message request response', error);
-      }
-    );
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit, Injectable, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { User } from '@app/_utils/_models';
 import { ApiService } from '@app/_utils/_services/api.service';
 import { SocketService } from '@app/_utils/_services/socket.service';
 import { UserService } from '@app/_utils/_services/user.service';
@@ -37,8 +38,8 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  sendMessageReq(receiver: number): void {
-    this.socketService.sendMessageRequest(this.userId, receiver);
+  sendMessageReq(receiver: User): void {
+    this.socketService.sendMessageRequest(this.userId, receiver.id, receiver.name);
     alert('Message sent successfully');
     this.dialogRef.close();
   }

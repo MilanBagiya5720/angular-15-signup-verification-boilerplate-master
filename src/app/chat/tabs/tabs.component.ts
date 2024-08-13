@@ -50,6 +50,7 @@ export class TabsComponent implements OnInit, OnDestroy {
     this.fetchUsersList();
     this.checkUserStatus();
     this.receiveRequest();
+    this.updateUserList();
   }
 
   registerUser(): void {
@@ -78,6 +79,14 @@ export class TabsComponent implements OnInit, OnDestroy {
   checkUserStatus(): void {
     this.subs.add(this.socketService.updateUserStatus().subscribe((data) => {
       this.updateUserStatus(data)
+    }))
+  }
+
+  updateUserList(): void {
+    this.subs.add(this.socketService.updateUserList().subscribe((data) => {
+      if (this.userId === data.receiverId && this.activeTab === data.status) {
+        this.usersList = data.users;
+      }
     }))
   }
 

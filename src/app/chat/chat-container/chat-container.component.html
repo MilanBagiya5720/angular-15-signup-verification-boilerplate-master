@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div class="chat-messages">
+    <div class="chat-messages" #chatMessages>
       <ng-container *ngIf="!groupedMessages?.length; else messagesContainer">
         <div>
           No messages
@@ -42,10 +42,17 @@
                   'message-right': message.senderId === userId,
                   'message-left': message.senderId !== userId
                 }">
-              <span class="message-content" (click)="deleteMessage(message)">{{ message.text }}</span>
+              <span class="message-content">{{ message.text }}</span>
               <span class="message-time">{{
                 formatTime(message.messageCreatedAt)
                 }}</span>
+
+              <div class="inline-flex" *ngIf="userId === message.senderId">
+                <i class="material-icons mark-as-read-icon !font-sm "
+                  [ngClass]="{ 'text-orange-600': message.isSeen, 'text-gray-600': !message.isSeen }">
+                  done_all
+                </i>
+              </div>
             </div>
           </div>
         </div>
