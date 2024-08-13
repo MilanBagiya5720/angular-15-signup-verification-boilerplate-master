@@ -31,12 +31,12 @@
 
   <!-- User List Display -->
   <div *ngIf="activeTab === userTabs.Pending">
-    <div *ngFor="let user of usersList" class="mb-6">
-      <div class="p-2 max-w-md bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700"
-        (click)="onUserSelected(user)">
+    <div class="mb-6">
+      <div class="max-w-md p-2 bg-white rounded-lg border shadow-md dark:bg-gray-800 dark:border-gray-700">
         <div class="flow-root">
           <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-            <li class="py-2 cursor-pointer" [ngClass]="{'bg-gray-100 dark:bg-gray-700': user.id === selectedUser?.id}">
+            <li class="py-2 cursor-pointer" *ngFor="let user of usersList"
+              [ngClass]="{'bg-gray-100 dark:bg-gray-700': user.id === selectedUser?.id}" (click)="onUserSelected(user)">
               <div class="flex items-center space-x-4">
                 <div class="flex-shrink-0">
                   <img class="w-8 h-8 rounded-full" [src]="'https://d3s43g258b91qc.cloudfront.net/' + user.images"
@@ -67,12 +67,12 @@
   </div>
 
   <div *ngIf="activeTab === userTabs.Accepted">
-    <div *ngFor="let user of usersList" class="mb-6">
-      <div class="p-2 max-w-md bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700"
-        (click)="onUserSelected(user)">
+    <div class="mb-6">
+      <div class="max-w-md p-2 bg-white rounded-lg border shadow-md dark:bg-gray-800 dark:border-gray-700">
         <div class="flow-root">
           <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-            <li class="py-2 cursor-pointer" [ngClass]="{'bg-gray-100 dark:bg-gray-700': user.id === selectedUser?.id}">
+            <li class="py-2 cursor-pointer" *ngFor="let user of usersList"
+              [ngClass]="{'bg-gray-100 dark:bg-gray-700': user.id === selectedUser?.id}" (click)="onUserSelected(user)">
               <div class="flex items-center space-x-4">
                 <div class="flex-shrink-0">
                   <img class="w-8 h-8 rounded-full" [src]="'https://d3s43g258b91qc.cloudfront.net/' + user.images"

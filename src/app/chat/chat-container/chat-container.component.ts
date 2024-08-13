@@ -4,6 +4,8 @@ import { ApiService } from '@app/_utils/_services/api.service';
 import { User } from '@app/_utils/_models/model';
 import { Router } from '@angular/router';
 import { ChatService } from '@app/_utils/_services/chat.service';
+import { UserService } from '@app/_utils/_services';
+
 
 @Component({
   selector: 'app-chat-container',
@@ -11,7 +13,7 @@ import { ChatService } from '@app/_utils/_services/chat.service';
   styleUrls: ['./chat-container.component.less']
 })
 export class ChatContainerComponent {
-  @Input() selectedUser: User = {} as User;
+  selectedUser: User = {} as User;
   isOnline: boolean = true;
   userId: number | null = null;
 
@@ -19,6 +21,7 @@ export class ChatContainerComponent {
     private socketService: SocketService,
     private apiService: ApiService,
     private chatService: ChatService,
+    private userService: UserService,
     private router: Router) {
     this.userId = this.apiService.getUserId();
   }
@@ -29,24 +32,31 @@ export class ChatContainerComponent {
 
   message = '';
   receiverId: number | null = null;
-  receiver: any;
   isTyping: boolean = false;
 
   groupedMessages: any[] = [];
 
   ngOnInit(): void {
     this.userId = this.apiService.getUserId();
-    this.receiverId = this.apiService.getReceiverId();
-    this.receiver = this.apiService.getReceiver();
+    this.getSelectedUser();
+  }
 
-    this.registerUser();
-    this.getUserMessage();
-    this.joinChat();
-    this.markAsRead();
-    this.listenClearChat();
-    this.listenDeleteMessage();
-    this.getMessageRequest();
-    this.getTypingStatus();
+  getSelectedUser(): void {
+    this.userService.user$.subscribe(user => {
+      if (user) {
+        this.selectedUser = user;
+        this.receiverId = user.id;
+
+        this.registerUser();
+        this.getUserMessage();
+        this.joinChat();
+        this.markAsRead();
+        this.listenClearChat();
+        this.listenDeleteMessage();
+        this.getMessageRequest();
+        this.getTypingStatus();
+      }
+    });
   }
 
   getTypingStatus(): void {
@@ -64,7 +74,7 @@ export class ChatContainerComponent {
     if (event instanceof KeyboardEvent && event.key !== 'Enter') {
       return;
     }
-    if (!this.receiver || this.receiver?.status !== 'accepted') {
+    if (!this.selectedUser || this.selectedUser?.status !== 'accepted') {
       return;
     }
     this.isTyping = event ? true : false;
@@ -142,7 +152,7 @@ export class ChatContainerComponent {
       this.message = '';
     }
 
-    if (this.receiver.status === 'new') {
+    if (this.selectedUser.status === 'new') {
       this.sendMessageRequest();
     }
   }

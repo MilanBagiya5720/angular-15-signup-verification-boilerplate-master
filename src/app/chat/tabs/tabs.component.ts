@@ -19,8 +19,6 @@ export enum Tabs {
   styleUrls: ['./tabs.component.less']
 })
 export class TabsComponent implements OnInit, OnDestroy {
-  @Output() userSelected = new EventEmitter<User>();
-
   activeTab: Tabs = Tabs.Accepted;
   totalUnreadMessageCount: number | null = 0;
   userId: number;
@@ -108,14 +106,7 @@ export class TabsComponent implements OnInit, OnDestroy {
 
   onUserSelected(user: User) {
     this.selectedUser = user;
-    this.userSelected.emit(user);
-    this.startChat(user);
-  }
-
-
-  public startChat(user: any): void {
-    this.apiService.setReceiverId(user.id);
-    this.apiService.setReceiver(user);
+    this.userService.setUser(user);
   }
 
   ngOnDestroy(): void {

@@ -12,6 +12,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ChatContainerComponent } from './chat-container/chat-container.component';
 import { BlankContainerComponent } from './blank-container/blank-container.component';
+import { RelativeTimePipe } from '@app/_utils/_pipe/relative-time.pipe';
 
 @NgModule({
   declarations: [
@@ -30,8 +31,10 @@ import { BlankContainerComponent } from './blank-container/blank-container.compo
     ReactiveFormsModule,
     RouterModule,
     MatDialogModule,
-    ChatRoutingModule
+    ChatRoutingModule,
+    RelativeTimePipe
   ],
+  providers: [RelativeTimePipe],
   exports: [NavbarComponent, ChatContainerComponent]
 })
 export class ChatModule { }

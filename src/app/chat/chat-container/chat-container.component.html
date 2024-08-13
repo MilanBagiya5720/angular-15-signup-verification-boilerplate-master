@@ -1,17 +1,30 @@
 <div class="chat-container flex flex-col h-full bg-white border border-gray-300 rounded-lg">
-  <div class="chat-header p-4 bg-gray-200 border-b border-gray-300 flex items-center justify-between">
-    <div class="chat-header-title font-semibold">Chat</div>
+  <div class="chat-header p-3 bg-gray-200 border-b border-gray-300 flex items-center justify-between">
+
+    <div class="flex gap-2 items-center">
+      <img class="w-8 h-8 rounded-full" [src]="'https://d3s43g258b91qc.cloudfront.net/' + selectedUser.images"
+        alt="{{selectedUser.name}}'s avatar" alt="Neil image">
+      <div class="chat-header-title font-semibold">{{selectedUser?.name ? selectedUser?.name :
+        selectedUser?.company_name}}</div>
+    </div>
+
     <div class="chat-header-actions flex items-center space-x-4">
-      <img src="path-to-user-profile-icon.png" alt="User Icon" class="w-8 h-8 rounded-full" />
       <button class="logout-button text-sm text-red-600">Logout</button>
     </div>
   </div>
 
-  <div class="chat-body flex-grow p-4 overflow-y-auto">
-    <div class="chat-messages">
+  <div class="chat-messages">
+
+    <ng-container *ngIf="!groupedMessages?.length; else messagesContainer">
+      <div>
+        No messages
+      </div>
+    </ng-container>
+
+    <ng-template #messagesContainer>
       <div *ngFor="let group of groupedMessages">
         <div class="time-group">
-          <h3>{{ group.timeGroup }}</h3>
+          <h3>{{ group.timeGroup | relativeTime }}</h3>
         </div>
         <div *ngFor="let message of group.messages" [ngClass]="{
             'message-container-right': message.senderId === userId,
@@ -29,7 +42,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </ng-template>
   </div>
 
   <div class="chat-input p-4 bg-gray-100 border-t border-gray-300">
