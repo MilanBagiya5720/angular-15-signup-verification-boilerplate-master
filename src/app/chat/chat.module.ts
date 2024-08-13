@@ -11,6 +11,7 @@ import { TabsComponent } from './tabs/tabs.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ChatContainerComponent } from './chat-container/chat-container.component';
+import { BlankContainerComponent } from './blank-container/blank-container.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ChatContainerComponent } from './chat-container/chat-container.componen
     SearchBarComponent,
     TabsComponent,
     NavbarComponent,
-    ChatContainerComponent
+    ChatContainerComponent,
+    BlankContainerComponent
   ],
   imports: [
     CommonModule,

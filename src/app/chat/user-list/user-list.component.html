@@ -1,27 +1,4 @@
-<!-- <h1 class="text-xl font-semibold mb-4"></h1>
-<div class="p-4">
-  <div *ngFor="let user of users" class="mb-4">
-    <a
-      class="flex items-center p-4 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 w-full transition ease-in-out duration-150">
-      <img [src]="user.avatarUrl" alt="{{user.name}}'s avatar" class="w-12 h-12 rounded-full mr-4">
-      <div class="flex-1">
-        <h5 class="text-lg font-semibold text-gray-900 dark:text-white break-words">
-          {{user.name ? user.name : user.company_name}}
-        </h5>
-      </div>
-      <button
-        class="ml-4 px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-        (click)="sendMessageReq(user.id)">Send Request</button>
-    </a>
-  </div>
-</div>
-<div class="p-4">
-  <button
-    class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white"
-    </button>
-</div> -->
-
-<div>
+<div class="wrapper">
   <div
     class="p-4 max-w-md bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700 min-w-[30rem]">
     <div class="flex justify-between items-center mb-4">
@@ -33,98 +10,21 @@
     </div>
     <div class="flow-root">
       <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-        <li class="py-3 sm:py-4">
+        <li class="py-3 sm:py-4" *ngFor="let user of users">
           <div class="flex items-center space-x-4">
             <div class="flex-shrink-0">
-              <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
-                alt="Neil image">
+              <img class="w-8 h-8 rounded-full" [src]="'https://d3s43g258b91qc.cloudfront.net/' + user.images" alt="Neil image">
             </div>
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                Neil Sims
+                {{user.name ? user.name : user.company_name}}
               </p>
-              <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                email@windster.com
-              </p>
+
             </div>
             <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-              $320
-            </div>
-          </div>
-        </li>
-        <li class="py-3 sm:py-4">
-          <div class="flex items-center space-x-4">
-            <div class="flex-shrink-0">
-              <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
-                alt="Bonnie image">
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                Bonnie Green
-              </p>
-              <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                email@windster.com
-              </p>
-            </div>
-            <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-              $3467
-            </div>
-          </div>
-        </li>
-        <li class="py-3 sm:py-4">
-          <div class="flex items-center space-x-4">
-            <div class="flex-shrink-0">
-              <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
-                alt="Michael image">
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                Michael Gough
-              </p>
-              <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                email@windster.com
-              </p>
-            </div>
-            <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-              $67
-            </div>
-          </div>
-        </li>
-        <li class="py-3 sm:py-4">
-          <div class="flex items-center space-x-4">
-            <div class="flex-shrink-0">
-              <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-4.jpg"
-                alt="Lana image">
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                Lana Byrd
-              </p>
-              <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                email@windster.com
-              </p>
-            </div>
-            <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-              $367
-            </div>
-          </div>
-        </li>
-        <li class="pt-3 pb-0 sm:pt-4">
-          <div class="flex items-center space-x-4">
-            <div class="flex-shrink-0">
-              <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                alt="Thomas image">
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                Thomes Lean
-              </p>
-              <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                email@windster.com
-              </p>
-            </div>
-            <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-              $2367
+              <button
+                class="ml-4 px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                (click)="sendMessageReq(user.id)">Send Request</button>
             </div>
           </div>
         </li>

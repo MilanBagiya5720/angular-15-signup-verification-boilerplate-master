@@ -29,6 +29,8 @@ export class TabsComponent implements OnInit, OnDestroy {
   usersList: User[] = [];
   receiverId: number;
 
+  selectedUser: User;
+
   constructor(
     private socketService: SocketService,
     private apiService: ApiService,
@@ -105,6 +107,7 @@ export class TabsComponent implements OnInit, OnDestroy {
   }
 
   onUserSelected(user: User) {
+    this.selectedUser = user;
     this.userSelected.emit(user);
     this.startChat(user);
   }

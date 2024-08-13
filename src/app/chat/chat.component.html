@@ -1,5 +1,5 @@
 <app-navbar></app-navbar>
-<div class="flex h-screen">
+<div class="flex">
   <app-tabs class="w-1/4 bg-gray-800 text-white" (userSelected)="selectUser($event)"></app-tabs>
-  <app-chat-container class="w-3/4" [selectedUser]="selectedUser"></app-chat-container>
+  <app-chat-container class="w-3/4 h-[91vh]" [selectedUser]="selectedUser"></app-chat-container>
 </div>
