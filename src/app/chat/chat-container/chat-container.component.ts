@@ -13,13 +13,13 @@ import { UserService } from '@app/_utils/_services';
   styleUrls: ['./chat-container.component.less']
 })
 export class ChatContainerComponent {
-  selectedUser: User = {} as User;
+  selectedUser: User;
   isOnline: boolean = true;
   userId: number | null = null;
 
   constructor(
     private socketService: SocketService,
-    private apiService: ApiService,
+    public apiService: ApiService,
     private chatService: ChatService,
     private userService: UserService,
     private router: Router) {
@@ -147,6 +147,7 @@ export class ChatContainerComponent {
         videoThumbnail: 'videoThumbnail',
         messageCreatedAt: new Date(),
         status: 'accepted',
+        senderName: this.selectedUser.name
       };
       this.socketService.sendMessage(message);
       this.message = '';

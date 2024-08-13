@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://devchat.foodismconnect.com/api',
-  localUrl: 'https://devchat.foodismconnect.com',
+  apiUrl: 'http://localhost:3005/api',
+  localUrl: 'http://localhost:3005',
 };
 
 /*

@@ -14,7 +14,7 @@ export class UserListComponent implements OnInit {
   users: any[] = [];
 
   constructor(private userService: UserService,
-    private apiService: ApiService,
+    public apiService: ApiService,
     private socketService: SocketService,
     public dialogRef: MatDialogRef<UserListComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {

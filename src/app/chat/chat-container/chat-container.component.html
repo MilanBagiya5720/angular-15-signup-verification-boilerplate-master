@@ -1,53 +1,61 @@
-<div class="chat-container flex flex-col h-full bg-white border border-gray-300 rounded-lg">
-  <div class="chat-header p-3 bg-gray-200 border-b border-gray-300 flex items-center justify-between">
+<div class="chat-messages">
+  <div class="chat-container flex flex-col h-full bg-white border border-gray-300 rounded-lg">
+    <div class="chat-header p-3 bg-gray-200 border-b border-gray-300 flex items-center justify-between">
 
-    <div class="flex gap-2 items-center">
-      <img class="w-8 h-8 rounded-full" [src]="'https://d3s43g258b91qc.cloudfront.net/' + selectedUser.images"
-        alt="{{selectedUser.name}}'s avatar" alt="Neil image">
-      <div class="chat-header-title font-semibold">{{selectedUser?.name ? selectedUser?.name :
-        selectedUser?.company_name}}</div>
-    </div>
-
-    <div class="chat-header-actions flex items-center space-x-4">
-      <button class="logout-button text-sm text-red-600">Logout</button>
-    </div>
-  </div>
-
-  <div class="chat-messages">
-
-    <ng-container *ngIf="!groupedMessages?.length; else messagesContainer">
-      <div>
-        No messages
-      </div>
-    </ng-container>
-
-    <ng-template #messagesContainer>
-      <div *ngFor="let group of groupedMessages">
-        <div class="time-group">
-          <h3>{{ group.timeGroup | relativeTime }}</h3>
-        </div>
-        <div *ngFor="let message of group.messages" [ngClass]="{
-            'message-container-right': message.senderId === userId,
-            'message-container-left': message.senderId !== userId
-          }">
-          <img [src]="getUserAvatar(message.senderId)" class="avatar" />
-          <div class="message" [ngClass]="{
-              'message-right': message.senderId === userId,
-              'message-left': message.senderId !== userId
-            }">
-            <span class="message-content" (click)="deleteMessage(message)">{{ message.text }}</span>
-            <span class="message-time">{{
-              formatTime(message.messageCreatedAt)
-              }}</span>
+      <div class="flex gap-2 items-center">
+        <div class="flex-shrink-0 relative">
+          <img class="w-8 h-8 rounded-full" [src]="apiService.getUserImage(selectedUser)"
+            alt="{{selectedUser.name}}'s avatar">
+          <div class="w-2 h-2 rounded-full mr-2 avatar-icon"
+            [ngClass]="{ 'bg-green-500': selectedUser.is_online, 'bg-red-600': !selectedUser.is_online }">
           </div>
         </div>
+        <div class="chat-header-title font-semibold">{{selectedUser?.name ? selectedUser?.name :
+          selectedUser?.company_name}}</div>
       </div>
-    </ng-template>
-  </div>
 
-  <div class="chat-input p-4 bg-gray-100 border-t border-gray-300">
-    <input [(ngModel)]="message" (keydown.enter)="sendMessage()" (input)="onTyping()" placeholder="Type a message..."
-      class="message-input" />
-    <button class="send-btn" (click)="sendMessage()">Send</button>
+      <div class="chat-header-actions flex items-center space-x-4">
+        <button class="logout-button text-sm text-emerald-950">
+          <i class="material-icons">more_horiz</i>
+        </button>
+      </div>
+    </div>
+
+    <div class="chat-messages">
+      <ng-container *ngIf="!groupedMessages?.length; else messagesContainer">
+        <div>
+          No messages
+        </div>
+      </ng-container>
+
+      <ng-template #messagesContainer>
+        <div *ngFor="let group of groupedMessages">
+          <div class="time-group">
+            <h3>{{ group.timeGroup | relativeTime }}</h3>
+          </div>
+          <div *ngFor="let message of group.messages" [ngClass]="{
+                'message-container-right': message.senderId === userId,
+                'message-container-left': message.senderId !== userId
+              }">
+            <img [src]="getUserAvatar(message.senderId)" class="avatar" />
+            <div class="message" [ngClass]="{
+                  'message-right': message.senderId === userId,
+                  'message-left': message.senderId !== userId
+                }">
+              <span class="message-content" (click)="deleteMessage(message)">{{ message.text }}</span>
+              <span class="message-time">{{
+                formatTime(message.messageCreatedAt)
+                }}</span>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="chat-input p-4 bg-gray-100 border-t border-gray-300">
+      <input [(ngModel)]="message" (keydown.enter)="sendMessage()" (input)="onTyping()" placeholder="Type a message..."
+        class="message-input" />
+      <button class="send-btn" (click)="sendMessage()">Send</button>
+    </div>
   </div>
 </div>

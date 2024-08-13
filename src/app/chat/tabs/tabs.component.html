@@ -3,7 +3,7 @@
   <div class="flex justify-between items-center mb-6">
     <div class="relative">
       <button
-        class="text-xs font-bold text-white bg-red-500 rounded-full w-8 h-8 flex items-center justify-center shadow-lg">
+        class="text-xs font-bold text-white bg-red-500 rounded-full w-5 h-5 flex items-center justify-center shadow-lg">
         {{ totalUnreadMessageCount }}
       </button>
     </div>
@@ -38,25 +38,25 @@
             <li class="py-2 cursor-pointer" *ngFor="let user of usersList"
               [ngClass]="{'bg-gray-100 dark:bg-gray-700': user.id === selectedUser?.id}" (click)="onUserSelected(user)">
               <div class="flex items-center space-x-4">
-                <div class="flex-shrink-0">
-                  <img class="w-8 h-8 rounded-full" [src]="'https://d3s43g258b91qc.cloudfront.net/' + user.images"
-                    alt="{{user.name}}'s avatar" alt="Neil image">
+                <div class="flex-shrink-0 relative">
+                  <img class="w-8 h-8 rounded-full" [src]="apiService.getUserImage(user)" alt="{{user.name}}'s avatar">
+                  <div class="w-2 h-2 rounded-full mr-2 avatar"
+                    [ngClass]="{ 'bg-green-500': user.is_online, 'bg-red-600': !user.is_online }">
+                  </div>
                 </div>
                 <div class="flex-1 min-w-0">
                   <h5 class="text-base font-bold text-gray-900 dark:text-white truncate">
-                    {{ user.name }}
+                    {{ user.name ? user.name : user.company_name }}
                   </h5>
-                  <p class="text-sm text-gray-500 dark:text-gray-400 truncate">
-                    {{ user.company_name }}
-                  </p>
+                  <div class="text-sm text-gray-500 dark:text-gray-400 truncate">
+                    {{user.last_message}}
+                  </div>
                 </div>
                 <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  <div class="w-3 h-3 rounded-full mr-2"
-                    [ngClass]="{ 'bg-green-500': user.is_online, 'bg-red-600': !user.is_online }">
-                  </div>
-                  <span class="text-sm text-gray-500 dark:text-gray-400">
-                    {{ user.is_online ? 'Online' : 'Offline' }}
-                  </span>
+                  <button
+                    class="text-xs font-bold text-white bg-red-500 rounded-full w-5 h-5 flex items-center justify-center shadow-lg">
+                    {{ totalUnreadMessageCount }}
+                  </button>
                 </div>
               </div>
             </li>
@@ -74,24 +74,30 @@
             <li class="py-2 cursor-pointer" *ngFor="let user of usersList"
               [ngClass]="{'bg-gray-100 dark:bg-gray-700': user.id === selectedUser?.id}" (click)="onUserSelected(user)">
               <div class="flex items-center space-x-4">
-                <div class="flex-shrink-0">
-                  <img class="w-8 h-8 rounded-full" [src]="'https://d3s43g258b91qc.cloudfront.net/' + user.images"
-                    alt="{{user.name}}'s avatar" alt="Neil image">
+                <div class="flex-shrink-0 relative">
+                  <img class="w-8 h-8 rounded-full" [src]="apiService.getUserImage(user)" alt="{{user.name}}'s avatar">
+                  <div class="w-2 h-2 rounded-full mr-2 avatar"
+                    [ngClass]="{ 'bg-green-500': user.is_online, 'bg-red-600': !user.is_online }">
+                  </div>
                 </div>
                 <div class="flex-1 min-w-0">
                   <h5 class="text-base font-bold text-gray-900 dark:text-white truncate">
-                    {{ user.name }}
+                    {{ user.name ? user.name : user.company_name }}
                   </h5>
-                  <p class="text-sm text-gray-500 dark:text-gray-400 truncate">
-                    {{ user.company_name }}
-                  </p>
-                </div>
-                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  <div class="w-3 h-3 rounded-full mr-2"
-                    [ngClass]="{ 'bg-green-500': user.is_online, 'bg-red-600': !user.is_online }">
+                  <div class="text-sm text-gray-500 dark:text-gray-400 truncate">
+                    {{user.last_message}}
                   </div>
-                  <span class="text-sm text-gray-500 dark:text-gray-400">
-                    {{ user.is_online ? 'Online' : 'Offline' }}
+                </div>
+                <div class="flex flex-col gap-3 items-end justify-between">
+                  <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                    <button
+                      class="text-xs font-bold text-white bg-red-500 rounded-full w-5 h-5 flex items-center justify-center shadow-lg">
+                      {{ user.unread_count }}
+                    </button>
+
+                  </div>
+                  <span class="text-xs text-gray-500 dark:text-gray-400">
+                    {{user.last_message_time | relativeTime}}
                   </span>
                 </div>
               </div>

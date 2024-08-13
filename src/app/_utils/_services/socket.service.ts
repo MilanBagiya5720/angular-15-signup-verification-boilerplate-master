@@ -42,7 +42,7 @@ export class SocketService {
   registerUserId(userId: number): void {
     if (userId && !this.isConnected()) {
       this.connect();
-      this.emit('register-user-id', userId);
+      this.emit('register-user-id', { userId });
     }
   }
 

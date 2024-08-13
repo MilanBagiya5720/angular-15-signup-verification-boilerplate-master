@@ -31,7 +31,7 @@ export class TabsComponent implements OnInit, OnDestroy {
 
   constructor(
     private socketService: SocketService,
-    private apiService: ApiService,
+    public apiService: ApiService,
     private userService: UserService,
     public dialog: MatDialog
   ) {

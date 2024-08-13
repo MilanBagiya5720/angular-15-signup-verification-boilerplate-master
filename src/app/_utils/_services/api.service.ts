@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { SocketService } from './socket.service';
+import { User } from '../_models';
 
 @Injectable({
   providedIn: 'root'
@@ -84,5 +85,10 @@ export class ApiService {
 
   getUserProfile(userId: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/profile/${userId}`);
+  }
+
+  public getUserImage(user: User): string {
+    return user.images
+      ? `https://d3s43g258b91qc.cloudfront.net/` + user.images : 'assets/self.jpg';
   }
 }
