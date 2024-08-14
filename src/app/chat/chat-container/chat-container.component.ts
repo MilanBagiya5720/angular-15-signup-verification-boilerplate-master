@@ -20,6 +20,7 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
   selectedUser: User;
   isOnline: boolean = true;
   userId: number | null = null;
+  user: any;
 
   constructor(
     private socketService: SocketService,
@@ -28,6 +29,7 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
     private userService: UserService,
     private router: Router) {
     this.userId = this.apiService.getUserId();
+    this.user = this.apiService.getUserDetails();
   }
 
   ngAfterViewChecked() {
@@ -186,8 +188,8 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
         senderId: this.userId,
         receiverId: this.receiverId,
         text: this.message,
-        sender: this.selectedUser.name,
-        receiver: 'receiver',
+        sender: this.user.name,
+        receiver: this.selectedUser.name,
         isSeen: 0,
         type: 'text',
         videoThumbnail: 'videoThumbnail',
