@@ -55,19 +55,6 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
     this.socketService.blockUser(this.userId, this.selectedUser.id);
   }
 
-  updateMessage(message: any) {
-    const chatHistory = message;
-    for (let i = 0; i < chatHistory.length; i++) {
-      for (let j = 0; j < chatHistory[i].messages!.length; j++) {
-        if (message['messageId'] == null) {
-          chatHistory[i].messages![j].isSeen = 1;
-        } else if (chatHistory[i].messages![j].messageId === message['messageId']) {
-          chatHistory[i].messages![j].isSeen = 1;
-        }
-      }
-    }
-  }
-
   getSelectedUser(): void {
     this.subscription = this.userService.user$.subscribe(user => {
       if (user) {
@@ -82,6 +69,7 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
         this.listenDeleteMessage();
         this.getTypingStatus();
         this.messagesRead();
+        this.messageRequestResponse();
       }
     });
   }
@@ -125,7 +113,20 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
   }
 
   markAsRead(): void {
-    this.socketService.markMessagesAsRead(this.userId!, this.receiverId!);
+    if (this.selectedUser.status === 'accepted' && this.userId && this.receiverId) {
+      this.socketService.markMessagesAsRead(this.userId!, this.receiverId!);
+    }
+  }
+
+  messageRequestResponse(): void {
+    this.subscription.add(
+      this.socketService.messageRequestResponse().subscribe((data) => {
+        if (data.receiverId === this.userId) {
+          this.selectedUser.status = data.status;
+          this.getMessagesList();
+        }
+      })
+    )
   }
 
   registerUser(): void {
@@ -166,12 +167,16 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
   joinChat(): void {
     if (this.receiverId !== null) {
       this.socketService.joinRoom(this.userId!, this.receiverId);
-      this.subscription = this.chatService
-        .getMessages(this.userId!, this.receiverId)
-        .subscribe((messages) => {
-          this.groupedMessages = messages;
-        });
+      this.getMessagesList();
     }
+  }
+
+  getMessagesList(): void {
+    this.subscription = this.chatService
+      .getMessages(this.userId!, this.receiverId)
+      .subscribe((messages) => {
+        this.groupedMessages = messages;
+      });
   }
 
   getUserAvatar(userId: number): string {
@@ -206,7 +211,7 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
     }
   }
 
-  public sendMessageRequest(): void {
+  sendMessageRequest(): void {
     this.socketService.sendMessageRequest(this.userId, this.receiverId, this.selectedUser.name);
   }
 

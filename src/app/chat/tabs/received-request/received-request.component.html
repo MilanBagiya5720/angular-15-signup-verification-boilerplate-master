@@ -21,7 +21,7 @@
             </div>
             <div class="flex flex-col gap-3 items-end justify-between">
               <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                <button
+                <button *ngIf="user.unread_count > 0"
                   class="text-xs font-bold text-white bg-red-500 rounded-full w-5 h-5 flex items-center justify-center shadow-lg">
                   {{ user.unread_count }}
                 </button>

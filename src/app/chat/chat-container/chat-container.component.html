@@ -13,9 +13,7 @@
           selectedUser?.company_name}}</div>
       </div>
       <div class="chat-header-actions flex items-center space-x-4">
-        <button class="logout-button text-sm text-emerald-950">
-          <i class="material-icons">more_horiz</i>
-        </button>
+        <app-action-dropdown [userId]="userId" [receiverId]="receiverId"></app-action-dropdown>
       </div>
     </div>
 
@@ -56,10 +54,12 @@
 
     <ng-container *ngIf="selectedUser?.status === 'pending';else inputForm">
       <div class="p-4 bg-yellow-100 border-t border-b border-yellow-300 text-center">
-        <button (click)="messageRequestActions('accepted')" class="accept-btn px-4 py-2 bg-green-500 text-white rounded-md mr-2">
+        <button (click)="messageRequestActions('accepted')"
+          class="accept-btn px-4 py-2 bg-green-500 text-white rounded-md mr-2">
           Accept
         </button>
-        <button (click)="messageRequestActions('rejected')" class="reject-btn px-4 py-2 bg-red-500 text-white rounded-md">
+        <button (click)="messageRequestActions('rejected')"
+          class="reject-btn px-4 py-2 bg-red-500 text-white rounded-md">
           Reject
         </button>
       </div>

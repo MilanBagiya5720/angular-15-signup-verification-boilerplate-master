@@ -1,0 +1,18 @@
+<div class="relative inline-block text-left">
+  <button (click)="toggleDropdown()">
+    <i class="material-icons">more_horiz</i>
+  </button>
+
+  <div *ngIf="isOpen" class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md ring-1 ring-black ring-opacity-5">
+    <div class="p-1">
+      <button (click)="openDialog('clear')"
+        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
+        Clear Chat
+      </button>
+      <button (click)="openDialog('block')"
+        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
+        Block User
+      </button>
+    </div>
+  </div>
+</div>

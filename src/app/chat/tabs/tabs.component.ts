@@ -50,13 +50,15 @@ export class TabsComponent implements OnInit, OnDestroy {
     this.checkUserStatus();
     this.receiveRequest();
     this.updateUserList();
+    this.messageRequestResponse();
+    this.listenClearChat();
   }
 
-  registerUser(): void {
+  private registerUser(): void {
     this.socketService.registerUserId(this.userId);
   }
 
-  fetchUnreadMessageCount(): void {
+  private fetchUnreadMessageCount(): void {
     this.subs.add(this.socketService.getUpdateUnreadMessageCount().subscribe((data) => {
       if (data.userId === this.userId) {
         this.totalUnreadMessageCount = data.unreadMessageCount;
@@ -64,25 +66,25 @@ export class TabsComponent implements OnInit, OnDestroy {
     }))
   }
 
-  fetchUsersList(): void {
+  private fetchUsersList(): void {
     this.subs.add(this.userService.fetchUsersByFilter(this.userId, this.activeTab).subscribe((user: any) => {
       this.usersList = user.users;
     }))
   }
 
-  changeTab(tab: Tabs): void {
+  public changeTab(tab: Tabs): void {
     this.activeTab = tab;
     this.usersList = [];
     this.fetchUsersList();
   }
 
-  checkUserStatus(): void {
+  private checkUserStatus(): void {
     this.subs.add(this.socketService.updateUserStatus().subscribe((data) => {
       this.updateUserStatus(data)
     }))
   }
 
-  updateUserList(): void {
+  private updateUserList(): void {
     this.subs.add(this.socketService.updateUserList().subscribe((data) => {
       if (this.userId === data.receiverId && this.activeTab === data.status) {
         this.usersList = data.users;
@@ -97,7 +99,7 @@ export class TabsComponent implements OnInit, OnDestroy {
     }
   }
 
-  receiveRequest(): void {
+  private receiveRequest(): void {
     this.subs.add(this.socketService.updateUserList().subscribe((data) => {
       if (this.userId === data.receiverId && this.activeTab === data.status) {
         this.usersList = data.users;
@@ -105,7 +107,23 @@ export class TabsComponent implements OnInit, OnDestroy {
     }))
   }
 
-  openDialog(): void {
+  private messageRequestResponse(): void {
+    this.subs.add(
+      this.socketService.messageRequestResponse().subscribe(() => {
+        this.activeTab = Tabs.Accepted;
+        this.fetchUsersList();
+      })
+    )
+  }
+
+  private listenClearChat(): void {
+    this.socketService.listenClearChat().subscribe(() => {
+      this.fetchUsersList();
+    });
+  }
+
+
+  public openDialog(): void {
     const dialogRef = this.dialog.open(UserListComponent);
     dialogRef.afterClosed().subscribe(() => {
       console.log('The dialog was closed');
