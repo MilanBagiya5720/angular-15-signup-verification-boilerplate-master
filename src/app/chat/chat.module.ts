@@ -13,6 +13,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ChatContainerComponent } from './chat-container/chat-container.component';
 import { BlankContainerComponent } from './blank-container/blank-container.component';
 import { RelativeTimePipe } from '@app/_utils/_pipe/relative-time.pipe';
+import { PendingRequestComponent } from './tabs/pending-request/pending-request.component';
+import { ReceivedRequestComponent } from './tabs/received-request/received-request.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { RelativeTimePipe } from '@app/_utils/_pipe/relative-time.pipe';
     TabsComponent,
     NavbarComponent,
     ChatContainerComponent,
-    BlankContainerComponent
+    BlankContainerComponent,
+    PendingRequestComponent,
+    ReceivedRequestComponent
   ],
   imports: [
     CommonModule,

@@ -112,11 +112,6 @@ export class TabsComponent implements OnInit, OnDestroy {
     });
   }
 
-  onUserSelected(user: User) {
-    this.selectedUser = user;
-    this.userService.setUser(user);
-  }
-
   ngOnDestroy(): void {
     this.totalUnreadMessageCount = null;
     this.subs.unsubscribe();
