@@ -1,12 +1,13 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-const url = 'https://devchat.foodismconnect.com';
+const liveEndpoint = 'https://devchat.foodismconnect.com';
+const localEndpoint = 'http://localhost:3005';
 
 export const environment = {
   production: false,
-  localUrl: url,
-  apiUrl: `${url}/api`,
+  localUrl: liveEndpoint,
+  apiUrl: `${liveEndpoint}/api`,
 };
 
 /*

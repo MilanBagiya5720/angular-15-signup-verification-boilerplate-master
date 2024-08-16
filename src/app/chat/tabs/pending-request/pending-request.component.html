@@ -15,15 +15,6 @@
               <h5 class="text-base font-bold text-gray-900 dark:text-white truncate">
                 {{ user.name ? user.name : user.company_name }}
               </h5>
-              <div class="text-sm text-gray-500 dark:text-gray-400 truncate">
-                {{user.last_message}}
-              </div>
-            </div>
-            <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-              <button
-                class="text-xs font-bold text-white bg-red-500 rounded-full w-5 h-5 flex items-center justify-center shadow-lg">
-                {{ user.unread_count }}
-              </button>
             </div>
           </div>
         </li>

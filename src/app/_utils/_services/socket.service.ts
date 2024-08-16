@@ -77,9 +77,10 @@ export class SocketService {
   respondMessageRequest(
     senderId: number,
     receiverId: number,
-    status: string
+    status: string,
+    userName: string
   ): void {
-    this.emit('respond-message-request', { senderId, receiverId, status });
+    this.emit('respond-message-request', { senderId, receiverId, status, userName });
   }
 
   messageRequestResponse(): Observable<any> {

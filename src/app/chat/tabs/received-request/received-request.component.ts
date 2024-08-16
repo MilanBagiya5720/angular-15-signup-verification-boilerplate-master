@@ -17,5 +17,6 @@ export class ReceivedRequestComponent {
   onUserSelect(user: any) {
     this.selectedUser = user;
     this.userService.setUser(user);
+    console.log(user);
   }
 }

@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import { ChatService } from '@app/_utils/_services/chat.service';
 import { UserService } from '@app/_utils/_services';
 
-
 @Component({
   selector: 'app-chat-container',
   templateUrl: './chat-container.component.html',
@@ -22,6 +21,11 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
   userId: number | null = null;
   user: any;
 
+  message = '';
+  receiverId: number | null = null;
+  isTyping: boolean = false;
+  groupedMessages: any[] = [];
+
   constructor(
     private socketService: SocketService,
     public apiService: ApiService,
@@ -30,6 +34,11 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
     private router: Router) {
     this.userId = this.apiService.getUserId();
     this.user = this.apiService.getUserDetails();
+  }
+
+  ngOnInit(): void {
+    this.userId = this.apiService.getUserId();
+    this.getSelectedUser();
   }
 
   ngAfterViewChecked() {
@@ -57,18 +66,6 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
         }
       }
     }
-  }
-
-
-  message = '';
-  receiverId: number | null = null;
-  isTyping: boolean = false;
-
-  groupedMessages: any[] = [];
-
-  ngOnInit(): void {
-    this.userId = this.apiService.getUserId();
-    this.getSelectedUser();
   }
 
   getSelectedUser(): void {
@@ -141,22 +138,29 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
     this.subscription = this.socketService.receiveMessage().subscribe((message) => {
       this.markAsRead();
 
-      // Get the last grouped message
       const lastGroupedMessage = this.groupedMessages.length > 0
         ? this.groupedMessages[this.groupedMessages.length - 1]
         : null;
 
       if (lastGroupedMessage && lastGroupedMessage.timeGroup === message.timeGroup) {
-        // Add the new message to the existing group
         lastGroupedMessage.messages.push(message);
       } else {
-        // Create a new group for the new timeGroup
         this.groupedMessages.push({
           timeGroup: message.timeGroup,
           messages: [message],
         });
       }
     });
+  }
+
+  messageRequestActions(status: string): void {
+    const userName = this.user.name
+    this.socketService.respondMessageRequest(
+      this.receiverId,
+      this.userId,
+      status,
+      userName
+    );
   }
 
   joinChat(): void {
@@ -234,14 +238,6 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
   formatTime(timestamp?: string): string {
     const date = timestamp ? new Date(timestamp) : new Date();
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
-
-  respondMessageRequest(status: string): void {
-    this.socketService.respondMessageRequest(
-      this.receiverId,
-      this.userId,
-      status
-    );
   }
 
   ngOnDestroy(): void {

@@ -72,6 +72,7 @@ export class TabsComponent implements OnInit, OnDestroy {
 
   changeTab(tab: Tabs): void {
     this.activeTab = tab;
+    this.usersList = [];
     this.fetchUsersList();
   }
 
@@ -106,7 +107,6 @@ export class TabsComponent implements OnInit, OnDestroy {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(UserListComponent);
-
     dialogRef.afterClosed().subscribe(() => {
       console.log('The dialog was closed');
     });
