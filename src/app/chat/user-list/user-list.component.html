@@ -1,4 +1,5 @@
 <div class="wrapper">
+  <div class="p-2"> <app-search-bar (searchUser)="searchUser($event)"></app-search-bar></div>
   <div
     class="p-4 max-w-md bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700 min-w-[30rem]">
     <div class="flex justify-between items-center mb-4">
@@ -8,19 +9,17 @@
         Close
       </a>
     </div>
-    <div class="flow-root">
+    <div class="flow-root" id="userList">
       <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
         <li class="py-3 sm:py-4" *ngFor="let user of users">
           <div class="flex items-center space-x-4">
             <div class="flex-shrink-0">
-              <img class="w-8 h-8 rounded-full" [src]="apiService.getUserImage(user)"
-                alt="{{user.name}}'s avatar">
+              <img class="w-8 h-8 rounded-full" [src]="apiService.getUserImage(user)" alt="{{user.name}}'s avatar">
             </div>
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
                 {{user.name ? user.name : user.company_name}}
               </p>
-
             </div>
             <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
               <button

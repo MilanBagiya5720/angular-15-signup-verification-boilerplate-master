@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models';
@@ -26,8 +26,12 @@ export class UserService {
     return this.userSubject.value;
   }
 
-  getAllUsers(userId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/${userId}`);
+  getAllUsers(userId: number, searchQuery?: string, limit = 10, offset = 0): Observable<any[]> {
+    let params = new HttpParams();
+    if (searchQuery) {
+      params = params.set('searchQuery', searchQuery);
+    }
+    return this.http.get<any[]>(`${this.apiUrl}/${userId}`, { params });
   }
 
   fetchUsersByFilter(userId: number, status: string): Observable<any[]> {

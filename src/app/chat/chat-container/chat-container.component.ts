@@ -179,6 +179,7 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
   }
 
   sendMessage(): void {
+    this.registerUser();
     if (
       this.message.trim() &&
       this.userId !== null &&
@@ -187,7 +188,7 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
       const message = {
         senderId: this.userId,
         receiverId: this.receiverId,
-        text: this.message,
+        text: this.message ?? 'test',
         sender: this.user.name,
         receiver: this.selectedUser.name,
         isSeen: 0,
@@ -198,10 +199,6 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
       };
       this.socketService.sendMessage(message);
       this.message = '';
-    }
-
-    if (this.selectedUser.status === 'new') {
-      this.sendMessageRequest();
     }
   }
 
