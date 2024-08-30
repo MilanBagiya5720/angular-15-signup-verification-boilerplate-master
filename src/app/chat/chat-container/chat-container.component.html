@@ -13,7 +13,8 @@
           selectedUser?.company_name}}</div>
       </div>
       <div class="chat-header-actions flex items-center space-x-4">
-        <app-action-dropdown [userId]="userId" [receiverId]="receiverId"></app-action-dropdown>
+        <app-action-dropdown [userId]="userId" [receiverId]="receiverId"
+          [selectedUser]="selectedUser"></app-action-dropdown>
       </div>
     </div>
 
@@ -52,25 +53,41 @@
       </ng-template>
     </div>
 
-    <ng-container *ngIf="selectedUser?.status === 'pending';else inputForm">
-      <div class="p-4 bg-yellow-100 border-t border-b border-yellow-300 text-center">
-        <button (click)="messageRequestActions('accepted')"
-          class="accept-btn px-4 py-2 bg-green-500 text-white rounded-md mr-2">
-          Accept
-        </button>
-        <button (click)="messageRequestActions('rejected')"
-          class="reject-btn px-4 py-2 bg-red-500 text-white rounded-md">
-          Reject
-        </button>
+    <div class="message-container-left" *ngIf="typingIndicator">
+      <div class="typingIndicatorBubble">
+        <div class="typingIndicatorBubbleDot"></div>
+        <div class="typingIndicatorBubbleDot"></div>
+        <div class="typingIndicatorBubbleDot"></div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="selectedUser.isBlock == 1">
+      <div class="p-4 bg-red-100 border-t border-b border-red-300 text-center">
+        You have blocked this user, you can't send or receive messages.
       </div>
     </ng-container>
 
-    <ng-template #inputForm>
-      <div class="chat-input p-4 bg-gray-100 border-t border-gray-300">
-        <input [(ngModel)]="message" (keydown.enter)="sendMessage()" (input)="onTyping()"
-          placeholder="Type a message..." class="message-input" />
-        <button class="send-btn" (click)="sendMessage()">Send</button>
-      </div>
-    </ng-template>
+    <ng-container *ngIf="selectedUser.isBlock == 0">
+      <ng-container *ngIf="selectedUser?.status === 'pending';else inputForm">
+        <div class="p-4 bg-yellow-100 border-t border-b border-yellow-300 text-center">
+          <button (click)="messageRequestActions('accepted')"
+            class="accept-btn px-4 py-2 bg-green-500 text-white rounded-md mr-2">
+            Accept
+          </button>
+          <button (click)="messageRequestActions('rejected')"
+            class="reject-btn px-4 py-2 bg-red-500 text-white rounded-md">
+            Reject
+          </button>
+        </div>
+      </ng-container>
+
+      <ng-template #inputForm>
+        <div class="chat-input p-4 bg-gray-100 border-t border-gray-300">
+          <input [(ngModel)]="message" (input)="onInputChange()" (keydown.enter)="sendMessage()"
+            placeholder="Type a message..." class="message-input" />
+          <button class="send-btn" (click)="sendMessage()">Send</button>
+        </div>
+      </ng-template>
+    </ng-container>
   </div>
 </div>

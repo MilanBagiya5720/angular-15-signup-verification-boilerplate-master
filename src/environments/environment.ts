@@ -6,8 +6,8 @@ const localEndpoint = 'http://localhost:3005';
 
 export const environment = {
   production: false,
-  localUrl: localEndpoint,
-  apiUrl: `${localEndpoint}/api`,
+  localUrl: liveEndpoint,
+  apiUrl: `${liveEndpoint}/api`,
 };
 
 /*

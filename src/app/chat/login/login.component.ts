@@ -2,10 +2,9 @@
 import { Component } from '@angular/core';
 import { SocketService } from '../../_utils/_services/socket.service';
 
-import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { environment } from '@environments/environment';
 import { ApiService } from '@app/_utils/_services/api.service';
+import { environment } from '@environments/environment';
 
 @Component({ templateUrl: 'login.component.html' })
 export class LoginComponent {

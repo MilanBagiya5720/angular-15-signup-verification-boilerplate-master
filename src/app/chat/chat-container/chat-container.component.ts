@@ -1,11 +1,11 @@
-import { Subject, Subscription } from 'rxjs';
-import { SocketService } from '@app/_utils/_services/socket.service';
-import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnDestroy, Pipe, ViewChild } from '@angular/core';
-import { ApiService } from '@app/_utils/_services/api.service';
-import { User } from '@app/_utils/_models/model';
+import { AfterViewChecked, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ChatService } from '@app/_utils/_services/chat.service';
+import { User } from '@app/_utils/_models/model';
 import { UserService } from '@app/_utils/_services';
+import { ApiService } from '@app/_utils/_services/api.service';
+import { ChatService } from '@app/_utils/_services/chat.service';
+import { SocketService } from '@app/_utils/_services/socket.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chat-container',
@@ -60,18 +60,23 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
       if (user) {
         this.selectedUser = user;
         this.receiverId = user.id;
-
-        this.registerUser();
-        this.getUserMessage();
-        this.joinChat();
-        this.markAsRead();
-        this.listenClearChat();
-        this.listenDeleteMessage();
-        this.getTypingStatus();
-        this.messagesRead();
-        this.messageRequestResponse();
+        this.initData();
       }
     });
+  }
+
+  initData() {
+    this.registerUser();
+    this.getUserMessage();
+    this.joinChat();
+    this.markAsRead();
+    this.listenClearChat();
+    this.listenDeleteMessage();
+    this.getTypingStatus();
+    this.messagesRead();
+    this.messageRequestResponse();
+    this.getUserStatus();
+    this.getIsTyping();
   }
 
   messagesRead(): void {
@@ -113,7 +118,7 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
   }
 
   markAsRead(): void {
-    if (this.selectedUser.status === 'accepted' && this.userId && this.receiverId) {
+    if (this.selectedUser.status === 'accepted' && this.selectedUser.isBlock == 0) {
       this.socketService.markMessagesAsRead(this.userId!, this.receiverId!);
     }
   }
@@ -133,6 +138,23 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
     if (this.userId === null) {
       this.router.navigate(['/login']);
     }
+  }
+
+  getUserStatus(): void {
+    this.socketService
+      .updateUserStatus()
+      .subscribe({
+        next: (data: any) => {
+          if (this.selectedUser) {
+            this.selectedUser.isBlock = data.is_blocked ? 1 : 0;
+            this.getMessagesList();
+            this.markAsRead();
+          }
+        },
+        error: (error: any) => {
+          console.error('Failed to update user status', error);
+        },
+      });
   }
 
   getUserMessage(): void {
@@ -177,6 +199,25 @@ export class ChatContainerComponent implements AfterViewChecked, OnDestroy {
       .subscribe((messages) => {
         this.groupedMessages = messages;
       });
+  }
+
+  typingIndicator = false;
+
+  onInputChange() {
+    this.isTyping = true;
+    this.socketService.setTyping(this.userId, this.receiverId, this.isTyping);
+    setTimeout(() => {
+      this.isTyping = false;
+      this.socketService.setTyping(this.userId, this.receiverId, this.isTyping);
+    }, 3000);
+  }
+
+  getIsTyping(): void {
+    this.socketService.isTyping().subscribe((data: any) => {
+      if (data.senderId === this.receiverId && data.receiverId === this.userId) {
+        this.typingIndicator = data.isTyping;
+      }
+    });
   }
 
   getUserAvatar(userId: number): string {

@@ -146,10 +146,23 @@ export class SocketService {
     return this.on<any>('update-unread-message-count');
   }
 
-  blockUser(senderId: number, receiverId: number): void {
-    this.emit('block-user', {
+  blockUser(senderId: any, receiverId: any): void {
+    this.emit('block-user', { senderId, receiverId });
+  }
+
+  unBlockUser(senderId: any, receiverId: any): void {
+    this.emit('unblock-user', { senderId, receiverId });
+  }
+
+  setTyping(senderId: number, receiverId: number, isTyping: boolean): void {
+    this.emit('typing', {
       senderId,
       receiverId,
-    });
+      isTyping
+    })
+  }
+
+  isTyping(): Observable<any> {
+    return this.on<any>('is-typing');
   }
 }

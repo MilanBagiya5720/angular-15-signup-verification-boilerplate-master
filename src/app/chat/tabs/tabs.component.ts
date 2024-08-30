@@ -6,6 +6,7 @@ import { SocketService } from '@app/_utils/_services/socket.service';
 import { UserService } from '@app/_utils/_services/user.service';
 import { Subscription } from 'rxjs';
 import { UserListComponent } from '../user-list/user-list.component';
+import { ChatService } from '@app/_utils/_services';
 
 
 export enum Tabs {
@@ -33,7 +34,8 @@ export class TabsComponent implements OnInit, OnDestroy {
     private socketService: SocketService,
     public apiService: ApiService,
     private userService: UserService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private chatService: ChatService
   ) {
     this.userId = this.apiService.getUserId();
     this.subs = new Subscription();
@@ -52,10 +54,17 @@ export class TabsComponent implements OnInit, OnDestroy {
     this.updateUserList();
     this.messageRequestResponse();
     this.listenClearChat();
+    this.getUnreadMessagesCount();
   }
 
   private registerUser(): void {
     this.socketService.registerUserId(this.userId);
+  }
+
+  private getUnreadMessagesCount(): void {
+    this.subs.add(this.chatService.getUnreadMessagesCount(this.userId).subscribe((data) => {
+      this.totalUnreadMessageCount = data.unreadCount;
+    }))
   }
 
   private fetchUnreadMessageCount(): void {

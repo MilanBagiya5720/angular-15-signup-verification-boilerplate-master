@@ -4,20 +4,79 @@
 
 /* You can add global styles to this file, and also import other style files */
 .app-container {
-    min-height: 320px;
+  min-height: 320px;
 }
 
 .admin-nav {
-    padding-top: 0;
-    padding-bottom: 0;
-    background-color: #e8e9ea;
-    border-bottom: 1px solid #ccc;
+  padding-top: 0;
+  padding-bottom: 0;
+  background-color: #e8e9ea;
+  border-bottom: 1px solid #ccc;
 }
 
 .btn-delete-account {
-    width: 40px;
-    text-align: center;
-    box-sizing: content-box;
+  width: 40px;
+  text-align: center;
+  box-sizing: content-box;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.typingIndicatorContainer {
+  display: flex;
+  flex: none;
+  align-items: flex-end;
+  margin: 8px 50px;
+}
+
+.typingIndicatorBubble {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 40px;
+  margin: 0px 8px;
+  background-color: #f0f1f1;
+  border-radius: 12px;
+}
+
+.typingIndicatorBubbleDot {
+  width: 4px;
+  height: 4px;
+  margin-right: 4px;
+  background-color: #57585a;
+  border-radius: 50%;
+  animation-name: bounce;
+  animation-duration: 1.3s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.typingIndicatorBubbleDot:first-of-type {
+  margin: 0px 4px;
+}
+
+.typingIndicatorBubbleDot:nth-of-type(2) {
+  animation-delay: 0.15s;
+}
+
+.typingIndicatorBubbleDot:nth-of-type(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes bounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-4px);
+  }
+}
