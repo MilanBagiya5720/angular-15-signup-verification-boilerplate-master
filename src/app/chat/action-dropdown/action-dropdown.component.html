@@ -9,10 +9,14 @@
         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
         Clear Chat
       </button>
-      <button (click)="openDialog('block')"
-        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
-        Block User
-      </button>
+
+      <button mat-menu-item *ngIf="selectedUser.isBlock == 1" (click)="openDialog('unblock')"
+        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">Unblock
+        User</button>
+
+      <button mat-menu-item *ngIf="selectedUser.isBlock == 0" (click)="openDialog('block')"
+        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">Block
+        User</button>
     </div>
   </div>
 </div>
